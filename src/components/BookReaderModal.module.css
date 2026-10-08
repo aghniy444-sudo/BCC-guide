@@ -1,0 +1,251 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 46, 123, 0.45);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modalCard {
+  background: #ffffff;
+  border: 1.5px solid var(--border-light);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -10px rgba(4, 46, 123, 0.35);
+  animation: popUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalHeader {
+  padding: 20px 28px;
+  background: var(--color-ice);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalHeaderTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badgePreview {
+  font-size: 0.76rem;
+  background: #ffffff;
+  border: 1px solid var(--color-sky);
+  color: var(--color-electric);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-navy);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--color-ice);
+  color: var(--color-electric);
+  border-color: var(--color-bright);
+}
+
+.modalBody {
+  padding: 28px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+}
+
+/* Left sidebar of reader */
+.readerSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bookCoverPreview {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(4, 46, 123, 0.12);
+}
+
+.authorCard {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authorAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-bright);
+}
+
+.tocSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tocHeading {
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-navy);
+  letter-spacing: 0.05em;
+}
+
+.tocList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tocItem {
+  font-size: 0.84rem;
+  color: var(--text-body);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+.tocActive {
+  background: var(--color-ice);
+  color: var(--color-electric);
+  border-left: 3px solid var(--color-electric);
+  font-weight: 600;
+}
+
+/* Right reading area */
+.readingArea {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.chapterTitleBar {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chapterLabel {
+  font-size: 0.84rem;
+  color: var(--color-bright);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.chapterHeading {
+  font-size: 1.5rem;
+  color: var(--color-navy);
+  margin-top: 4px;
+  font-weight: 700;
+}
+
+.readingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: var(--text-body);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.takeawaysBox {
+  background: var(--color-ice);
+  border: 1px solid var(--color-sky);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.takeawaysTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.takeawaysList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.takeawayItem {
+  font-size: 0.88rem;
+  color: var(--text-body);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.modalFooter {
+  padding: 18px 28px;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popUp {
+  from { opacity: 0; transform: scale(0.95) translateY(15px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 800px) {
+  .modalBody {
+    grid-template-columns: 1fr;
+  }
+
+  .readerSidebar {
+    display: none;
+  }
+}

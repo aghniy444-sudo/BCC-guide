@@ -1,0 +1,524 @@
+/* ==========================================================================
+   Desktop Glassmorphism Navbar (Reference Photo 2 Travique Replica)
+   Mobile Android Floating Capsule Navbar (Reference Photo 3 Replica)
+   ========================================================================== */
+
+.headerWrapper {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.headerScrolled {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border-bottom: 1px solid rgba(0, 78, 224, 0.08);
+  box-shadow: 0 4px 20px rgba(4, 46, 123, 0.06);
+}
+
+.navContainer {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Brand Logo
+   -------------------------------------------------------------------------- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.brand:hover {
+  transform: translateY(-1px);
+}
+
+.brandIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-electric);
+  filter: drop-shadow(0 2px 6px rgba(0, 78, 224, 0.25));
+  animation: pulseSparkle 4s ease-in-out infinite;
+}
+
+@keyframes pulseSparkle {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.08) rotate(5deg);
+    opacity: 1;
+    filter: drop-shadow(0 4px 10px rgba(0, 78, 224, 0.4));
+  }
+}
+
+.brandText {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Center Pill Navigation Capsule (Reference Photo 2 Glass Capsule)
+   -------------------------------------------------------------------------- */
+.centerPill {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-pill);
+  padding: 4px 6px;
+  gap: 4px;
+  box-shadow: 0 4px 20px rgba(4, 46, 123, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.centerPill:hover {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 24px rgba(4, 46, 123, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.navItem {
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #334155;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.navItem:hover {
+  color: var(--color-electric);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+/* Active Pill (matches the solid white capsule in Reference Photo 2) */
+.navItemActive {
+  background: #ffffff !important;
+  color: var(--color-navy) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(4, 46, 123, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 78, 224, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   Right Actions (Search + Cart + Login Capsule)
+   -------------------------------------------------------------------------- */
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Frosted Glass Search Circular Button */
+.searchBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-navy);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(4, 46, 123, 0.04);
+}
+
+.searchBtn:hover {
+  color: var(--color-electric);
+  background: #ffffff;
+  border-color: var(--color-sky);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 78, 224, 0.12);
+}
+
+/* Frosted Glass Cart Circular Button */
+.cartBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-navy);
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(4, 46, 123, 0.04);
+}
+
+.cartBtn:hover {
+  color: var(--color-electric);
+  background: #ffffff;
+  border-color: var(--color-sky);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 78, 224, 0.12);
+}
+
+.cartBadge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  background: var(--color-electric);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 78, 224, 0.35);
+}
+
+/* Login Button - Reference Photo 2 "Book Now" style Crisp White Capsule */
+.loginBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--color-navy);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-pill);
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 10px rgba(4, 46, 123, 0.08);
+}
+
+.loginBtn:hover {
+  transform: translateY(-1px);
+  background: var(--color-electric);
+  color: #ffffff;
+  border-color: var(--color-electric);
+  box-shadow: 0 6px 18px rgba(0, 78, 224, 0.25);
+}
+
+.loginAvatarCircle {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginText {
+  text-transform: capitalize;
+}
+
+/* Mobile buttons hidden on desktop */
+.mobileMenuBtn,
+.mobileQuickCartBtn,
+.mobileDrawerWrapper,
+.mobileBackdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   Mobile / Android Layout (Reference Photo 3 Floating Capsule Replica)
+   ========================================================================== */
+@media (max-width: 868px) {
+  .headerWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Floating Rounded Capsule Container matching Photo 3 */
+  .navContainer {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 9999px;
+    padding: 7px 10px 7px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 30px rgba(4, 46, 123, 0.1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .brandText {
+    font-size: 1.3rem;
+  }
+
+  /* Hide center desktop capsule and desktop action buttons */
+  .centerPill {
+    display: none;
+  }
+
+  .searchBtn,
+  .cartBtn,
+  .loginBtn {
+    display: none;
+  }
+
+  /* Mobile Cart Quick Icon (shows when cart has items) */
+  .mobileQuickCartBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(244, 248, 254, 0.85);
+    border: 1px solid rgba(0, 78, 224, 0.08);
+    color: var(--color-navy);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobileQuickCartBtn:hover {
+    color: var(--color-electric);
+    background: #ffffff;
+  }
+
+  .mobileCartDot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--color-electric);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #ffffff;
+  }
+
+  /* Mobile Hamburger Button matching Reference Photo 3 */
+  .mobileMenuBtn {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(244, 248, 254, 0.85);
+    color: var(--color-navy);
+    border: 1px solid rgba(0, 78, 224, 0.08);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobileMenuBtn:hover,
+  .mobileMenuBtnActive {
+    background: #ffffff;
+    color: var(--color-electric);
+    box-shadow: 0 2px 10px rgba(0, 78, 224, 0.15);
+  }
+
+  /* Dimmed Glass Backdrop */
+  .mobileBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 46, 123, 0.18);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    pointer-events: auto;
+    animation: fadeIn 0.2s ease;
+  }
+
+  /* Floating Dropdown Drawer */
+  .mobileDrawerWrapper {
+    display: block;
+    position: fixed;
+    top: 72px;
+    left: 16px;
+    right: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    z-index: 1001;
+    pointer-events: auto;
+    animation: mobileSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobileDrawer {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(4, 46, 123, 0.14);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Quick Actions Row */
+  .mobileActionsRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .mobileActionBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    background: rgba(244, 248, 254, 0.85);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .mobileActionBtn:hover {
+    background: #ffffff;
+    color: var(--color-electric);
+    box-shadow: 0 2px 8px rgba(0, 78, 224, 0.1);
+  }
+
+  .mobileLoginPill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    background: var(--color-electric);
+    color: #ffffff;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 78, 224, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .mobileLoginPill:hover {
+    background: var(--color-navy);
+  }
+
+  /* Divider */
+  .mobileDivider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 78, 224, 0.12), transparent);
+    margin: 2px 0;
+  }
+
+  /* Mobile Links List */
+  .mobileNavLinksList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mobileNavItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-radius: var(--radius-pill);
+    color: #334155;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .mobileNavItem:hover {
+    background: rgba(244, 248, 254, 0.85);
+    color: var(--color-electric);
+  }
+
+  .mobileNavItemActive {
+    background: #ffffff !important;
+    color: var(--color-navy) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 10px rgba(4, 46, 123, 0.1);
+    border: 1px solid rgba(0, 78, 224, 0.1);
+  }
+
+  .activeDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-electric);
+    box-shadow: 0 0 8px var(--color-electric);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mobileSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

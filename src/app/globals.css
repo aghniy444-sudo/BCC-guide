@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Ocean Breeze Color Palette from Reference */
+  --color-navy: #042E7B;      /* Deep Navy 042E7B */
+  --color-electric: #004EE0;  /* Vibrant Blue 004EE0 */
+  --color-bright: #1883FF;    /* Dodger Blue 1883FF */
+  --color-sky: #99CAFF;       /* Soft Sky 99CAFF */
+  --color-ice: #E3F2FF;       /* Ice Blue E3F2FF */
+
+  /* Neutral & Base Colors - Clean White Aesthetic */
+  --bg-pure: #ffffff;
+  --bg-page: #fbfdff;
+  --bg-subtle: #f4f8fe;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfdff;
+
+  --text-title: #042E7B;
+  --text-body: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --text-white: #ffffff;
+
+  /* Borders & Dividers */
+  --border-light: #e6f0fa;
+  --border-subtle: #d0e4fa;
+  --border-focus: #1883FF;
+  --border-accent: #99CAFF;
+
+  /* Radii */
+  --radius-pill: 9999px;
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  /* Shadows - Crisp & Airy */
+  --shadow-xs: 0 2px 6px rgba(4, 46, 123, 0.04);
+  --shadow-sm: 0 4px 14px rgba(4, 46, 123, 0.06);
+  --shadow-md: 0 10px 28px -6px rgba(4, 46, 123, 0.09);
+  --shadow-lg: 0 20px 45px -12px rgba(4, 46, 123, 0.14);
+  --shadow-glow: 0 8px 30px rgba(0, 78, 224, 0.28);
+  --shadow-card: 0 12px 32px -8px rgba(4, 46, 123, 0.08), 0 2px 6px rgba(4, 46, 123, 0.04);
+
+  /* Fun Accents */
+  --badge-discount-bg: #ef4444;
+  --badge-discount-text: #ffffff;
+  --badge-bundling-bg: #e0e7ff;
+  --badge-bundling-text: #4338ca;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+section[id],
+footer[id] {
+  scroll-margin-top: 85px;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  color: var(--text-body);
+  font-family: 'Poppins', var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Clean subtle blueprint / notebook grid pattern matching reference */
+  background-image: 
+    linear-gradient(to right, rgba(0, 78, 224, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 78, 224, 0.045) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', var(--font-poppins), sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: 'Poppins', var(--font-poppins), sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: 'Poppins', var(--font-poppins), sans-serif;
+  outline: none;
+}
+
+/* Custom Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sky);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bright);
+}
+
+/* Base Layout Container */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Badge Pill - Fun Clean Style */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--color-ice);
+  color: var(--color-electric);
+  border: 1px solid var(--color-sky);
+  box-shadow: 0 2px 10px rgba(0, 78, 224, 0.08);
+}
+
+/* Text Gradients in Ocean Breeze */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-electric) 60%, var(--color-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-electric {
+  background: linear-gradient(135deg, var(--color-electric) 0%, var(--color-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Button Variants */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--color-electric) 0%, var(--color-bright) 100%);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.96rem;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 78, 224, 0.38);
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-electric) 100%);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 26px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ice);
+  color: var(--color-electric);
+  font-weight: 600;
+  font-size: 0.96rem;
+  border: 1px solid var(--color-sky);
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background: #d4e8fd;
+  color: var(--color-navy);
+  border-color: var(--color-bright);
+  transform: translateY(-2px);
+}
+
+/* Clean Toast Notification */
+.toast-notice {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--color-bright);
+  color: var(--color-navy);
+  font-weight: 600;
+  box-shadow: 0 12px 35px rgba(4, 46, 123, 0.18), 0 0 0 1px var(--color-sky);
+  animation: slideInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

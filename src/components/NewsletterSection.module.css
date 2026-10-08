@@ -1,0 +1,112 @@
+.newsletterCard {
+  background: linear-gradient(135deg, var(--color-ice) 0%, #ffffff 60%, var(--color-ice) 100%);
+  border: 1.5px solid var(--color-sky);
+  border-radius: var(--radius-xl);
+  padding: 56px 48px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 40px;
+  margin: 40px 0 80px;
+  box-shadow: 0 12px 36px rgba(0, 78, 224, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.leftContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.cardDesc {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.formBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid var(--color-sky);
+  border-radius: var(--radius-pill);
+  padding: 6px 6px 6px 20px;
+  box-shadow: 0 4px 18px rgba(4, 46, 123, 0.06);
+  transition: all 0.2s ease;
+}
+
+.inputGroup:focus-within {
+  border-color: var(--color-bright);
+  box-shadow: 0 0 0 3px rgba(24, 131, 255, 0.15);
+}
+
+.emailInput {
+  border: none;
+  background: transparent;
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-body);
+}
+
+.emailInput::placeholder {
+  color: #94a3b8;
+}
+
+.subscribeBtn {
+  background: linear-gradient(135deg, var(--color-electric) 0%, var(--color-bright) 100%);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 78, 224, 0.25);
+  transition: all 0.25s ease;
+}
+
+.subscribeBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 78, 224, 0.38);
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-electric) 100%);
+}
+
+.guaranteeNote {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .newsletterCard {
+    grid-template-columns: 1fr;
+    padding: 36px 24px;
+    gap: 28px;
+  }
+  .cardTitle {
+    font-size: 1.8rem;
+  }
+  .inputGroup {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    gap: 12px;
+  }
+  .subscribeBtn {
+    width: 100%;
+  }
+}

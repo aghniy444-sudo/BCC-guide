@@ -1,0 +1,118 @@
+.footer {
+  background: #ffffff;
+  border-top: 1.5px solid var(--border-light);
+  padding: 80px 0 30px;
+  color: var(--text-body);
+  position: relative;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandName {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+}
+
+.brandBio {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.contactInfo {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.colHeading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+
+.linkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linkItem a {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.linkItem a:hover {
+  color: var(--color-electric);
+  transform: translateX(3px);
+  display: inline-block;
+}
+
+.bottomBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 30px;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.paymentBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payBadge {
+  background: var(--color-ice);
+  border: 1px solid var(--color-sky);
+  color: var(--color-navy);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
+  .bottomBar {
+    flex-direction: column;
+    text-align: center;
+  }
+}
