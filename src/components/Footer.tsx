@@ -8,7 +8,6 @@ export default function Footer() {
     <footer id="contact" className={styles.footer}>
       <div className="container">
         <div className={styles.footerGrid}>
-          {/* Brand info */}
           <div className={styles.brandCol}>
             <div className={styles.brandRow}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -17,62 +16,45 @@ export default function Footer() {
                   fill="var(--color-electric)"
                 />
               </svg>
-              <span className={styles.brandName}>Educare</span>
+              <span className={styles.brandName}>BCC Guide</span>
             </div>
             <p className={styles.brandBio}>
-              Penerbit independen buku panduan teknis digital berkualitas tinggi. Membekali talenta teknologi dengan materi praktis berstandar industri.
+              Platform materi business case competition: guide book e-book dan template deck
+              presentasi untuk lomba.
             </p>
-            <div className={styles.contactInfo}>
-              📧 halo@educare.id • 📍 Jakarta, Indonesia
-            </div>
+            <div className={styles.contactInfo}>Pembayaran QRIS • Akses materi langsung di dashboard</div>
           </div>
 
-          {/* Links 1 */}
           <div>
-            <div className={styles.colHeading}>3 Guidebook Pilihan</div>
+            <div className={styles.colHeading}>Produk</div>
             <ul className={styles.linkList}>
-              <li className={styles.linkItem}><a href="#catalog">AI Engineering Handbook</a></li>
-              <li className={styles.linkItem}><a href="#catalog">UI/UX Design Systems Mastery</a></li>
-              <li className={styles.linkItem}><a href="#catalog">Distributed Systems Architecture</a></li>
+              <li className={styles.linkItem}><a href="#catalog">Guide Book BCC</a></li>
+              <li className={styles.linkItem}><a href="#catalog">Template Deck (11 PPTX)</a></li>
+              <li className={styles.linkItem}><a href="#catalog">Bundel Hemat</a></li>
             </ul>
           </div>
 
-          {/* Links 2 */}
           <div>
-            <div className={styles.colHeading}>Program & Layanan</div>
+            <div className={styles.colHeading}>Akun</div>
             <ul className={styles.linkList}>
-              <li className={styles.linkItem}><a href="#mentors">Daftar Mentor Penulis</a></li>
-              <li className={styles.linkItem}><a href="#about">Lisensi Perusahaan (Team)</a></li>
-              <li className={styles.linkItem}><a href="#about">Jaminan Pembaruan Gratis</a></li>
-              <li className={styles.linkItem}><a href="#contact">Kemitraan Penulisan Buku</a></li>
+              <li className={styles.linkItem}><a href="#hero">Masuk / Daftar</a></li>
+              <li className={styles.linkItem}><a href="#catalog">Deck Gratis</a></li>
+              <li className={styles.linkItem}><a href="#contact">Dashboard</a></li>
             </ul>
           </div>
 
-          {/* Links 3 */}
           <div>
-            <div className={styles.colHeading}>Bantuan & Legalitas</div>
+            <div className={styles.colHeading}>Bantuan</div>
             <ul className={styles.linkList}>
-              <li className={styles.linkItem}><a href="#about">Kebijakan Pengembalian Dana</a></li>
-              <li className={styles.linkItem}><a href="#about">Syarat & Ketentuan Lisensi</a></li>
-              <li className={styles.linkItem}><a href="#about">Kebijakan Privasi</a></li>
-              <li className={styles.linkItem}><a href="#contact">Hubungi Tim Dukungan</a></li>
+              <li className={styles.linkItem}><a href="#about">Tentang</a></li>
+              <li className={styles.linkItem}><a href="#catalog">Cara Akses Materi</a></li>
+              <li className={styles.linkItem}><a href="#contact">Kontak</a></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className={styles.bottomBar}>
-          <div>
-            &copy; {new Date().getFullYear()} Educare Publishing. Seluruh hak cipta dilindungi undang-undang.
-          </div>
-
-          <div className={styles.paymentBadges}>
-            <span className={styles.payBadge}>QRIS</span>
-            <span className={styles.payBadge}>BCA Virtual Account</span>
-            <span className={styles.payBadge}>Mandiri</span>
-            <span className={styles.payBadge}>GoPay</span>
-            <span className={styles.payBadge}>Visa / Master</span>
-          </div>
+          <div>&copy; {new Date().getFullYear()} BCC Guide.</div>
         </div>
       </div>
     </footer>

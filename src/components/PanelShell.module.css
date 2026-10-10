@@ -1,0 +1,560 @@
+.shell {
+  --sidebar-width: 264px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+}
+
+.shellCollapsed {
+  --sidebar-width: 84px;
+}
+
+/* ---------------------------------------------------------------- sidebar */
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: calc(100vh - 48px);
+  padding: 18px 14px;
+  border: 1px solid rgba(153, 202, 255, 0.55);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .sidebar {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+  }
+}
+
+.sideHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 40px;
+  color: var(--color-navy);
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.brandMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--color-electric), var(--color-bright));
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+
+.brandText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collapseBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text-muted);
+}
+
+.collapseBtn:hover {
+  background: var(--color-ice);
+  color: var(--color-navy);
+}
+
+.closeBtn {
+  display: none;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  color: var(--text-light);
+}
+
+.search:focus-within {
+  border-color: var(--color-sky);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(24, 131, 255, 0.14);
+}
+
+.searchInput {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-body);
+  font: inherit;
+  font-size: 0.86rem;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.groupLabel {
+  margin: 0 10px 6px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.navLink,
+.navLinkActive {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+.navLink:hover {
+  background: var(--color-ice);
+  color: var(--color-navy);
+}
+
+.navLinkActive {
+  background: linear-gradient(135deg, var(--color-electric), var(--color-bright));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-glow);
+}
+
+.navIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  color: currentColor;
+}
+
+.navLabel,
+.catalogText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navBadge {
+  flex: none;
+  min-width: 22px;
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-discount-bg);
+  color: var(--badge-discount-text);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.navLinkActive .navBadge {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.noResult {
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.sideFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.catalogLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-electric);
+}
+
+.catalogLink:hover {
+  background: var(--color-ice);
+}
+
+.identityCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--color-electric), var(--color-bright));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.identityEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.identityRole {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.logoutBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.logoutBtn:hover {
+  background: #fff;
+  color: var(--badge-discount-bg);
+}
+
+.roleChip {
+  flex: none;
+  padding: 4px 10px;
+  border: 1px solid var(--color-sky);
+  border-radius: var(--radius-pill);
+  background: var(--color-ice);
+  color: var(--color-electric);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- content */
+
+.content {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid rgba(153, 202, 255, 0.55);
+  border-radius: var(--radius-xl);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  overflow-wrap: anywhere;
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .content {
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+}
+
+.mobileBar {
+  display: none;
+}
+
+.backdrop {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- collapsed */
+
+.sidebarCollapsed .brandText,
+.sidebarCollapsed .search,
+.sidebarCollapsed .groupLabel,
+.sidebarCollapsed .navLabel,
+.sidebarCollapsed .catalogText,
+.sidebarCollapsed .identityText {
+  display: none;
+}
+
+.sidebarCollapsed .sideHead {
+  justify-content: center;
+}
+
+.sidebarCollapsed .collapseBtn {
+  margin-left: 0;
+}
+
+.sidebarCollapsed .navLink,
+.sidebarCollapsed .navLinkActive,
+.sidebarCollapsed .catalogLink {
+  justify-content: center;
+  gap: 0;
+  padding: 8px;
+}
+
+.sidebarCollapsed .navBadge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  margin-left: 0;
+  padding: 1px 6px;
+}
+
+.sidebarCollapsed .navLink,
+.sidebarCollapsed .navLinkActive {
+  position: relative;
+}
+
+.sidebarCollapsed .identityCard {
+  justify-content: center;
+  padding: 8px;
+}
+
+.sidebarCollapsed .logoutBtn {
+  display: none;
+}
+
+.brand:focus-visible,
+.navLink:focus-visible,
+.navLinkActive:focus-visible,
+.catalogLink:focus-visible,
+.menuBtn:focus-visible,
+.closeBtn:focus-visible,
+.collapseBtn:focus-visible,
+.logoutBtn:focus-visible {
+  outline: 2px solid var(--color-bright);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- mobile */
+
+@media (min-width: 900px) {
+  .collapseBtn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 899px) {
+  .shell,
+  .shellCollapsed {
+    --sidebar-width: 0px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+    row-gap: 16px;
+  }
+
+  .mobileBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(153, 202, 255, 0.55);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .menuBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-sky);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--color-navy);
+  }
+
+  .mobileBrand {
+    color: var(--color-navy);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .mobileBar .roleChip {
+    margin-left: auto;
+  }
+
+  .sidebar,
+  .sidebarCollapsed {
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 86vw);
+    max-height: none;
+    padding: 16px;
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid var(--border-light);
+    background: var(--bg-pure);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: transform 0.2s ease, visibility 0.2s ease;
+  }
+
+  .sidebarOpen {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  /* The drawer always shows full labels, even when the desktop rail is collapsed. */
+  .sidebarCollapsed .brandText,
+  .sidebarCollapsed .search,
+  .sidebarCollapsed .groupLabel,
+  .sidebarCollapsed .navLabel,
+  .sidebarCollapsed .catalogText,
+  .sidebarCollapsed .identityText {
+    display: revert;
+  }
+
+  .sidebarCollapsed .navLink,
+  .sidebarCollapsed .navLinkActive,
+  .sidebarCollapsed .catalogLink {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 8px 12px;
+  }
+
+  .sidebarCollapsed .navBadge {
+    position: static;
+    margin-left: auto;
+  }
+
+  .sidebarCollapsed .sideHead {
+    justify-content: flex-start;
+  }
+
+  .sidebarCollapsed .identityCard {
+    justify-content: flex-start;
+  }
+
+  .sidebarCollapsed .logoutBtn {
+    display: inline-flex;
+  }
+
+  .collapseBtn {
+    display: none;
+  }
+
+  .closeBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--color-navy);
+  }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border: none;
+    background: rgba(4, 46, 123, 0.45);
+  }
+
+  .content {
+    padding: 20px;
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
+}

@@ -2,27 +2,53 @@
 
 import React, { useState } from 'react';
 import styles from './FAQSection.module.css';
-import { FAQS } from '@/data/booksData';
+
+interface Faq {
+  question: string;
+  answer: string;
+}
+
+const FAQS: Faq[] = [
+  {
+    question: 'Apa isi Guide Book Business Case Competition?',
+    answer:
+      'E-book berisi kerangka analisis business case, struktur slide presentasi, alur narasi, dan contoh studi kasus. Harga dan isi akhir dapat diperbarui oleh admin.',
+  },
+  {
+    question: 'Apa isi paket Template Deck?',
+    answer:
+      'Paket berisi 11 template deck PowerPoint untuk lomba business case competition, mulai dari slide judul hingga rencana implementasi.',
+  },
+  {
+    question: 'Apakah ada paket bundel?',
+    answer:
+      'Ya. Paket bundel berisi Guide Book dan seluruh 11 template deck dengan harga lebih hemat dibanding membeli terpisah.',
+  },
+  {
+    question: 'Bagaimana cara mengakses materi setelah pembelian?',
+    answer:
+      'Setelah pembayaran terkonfirmasi, materi terbuka di dashboard Anda dan dapat diunduh melalui tautan aman (signed URL berumur pendek).',
+  },
+  {
+    question: 'Metode pembayaran apa yang dipakai?',
+    answer:
+      'Pembayaran dilakukan melalui QRIS. Setelah pembayaran terkonfirmasi, akses materi terbuka otomatis di dashboard akun Anda.',
+  },
+];
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const toggleItem = (idx: number) => {
-    setOpenIndex(openIndex === idx ? null : idx);
-  };
 
   return (
     <section className={styles.faqSection}>
       <div className="container">
         <div className={styles.header}>
-          <div className="badge-pill" style={{ alignSelf: 'center' }}>
-            Pertanyaan Umum
-          </div>
+          <p className="eyebrow">Pertanyaan Umum</p>
           <h2 className={styles.title}>
-            Kerap Ditanyakan Seputar <span className="text-gradient">Pembelian</span>
+            Kerap Ditanyakan Seputar <span className="text-gradient">Produk &amp; Akses</span>
           </h2>
           <p className={styles.subtitle}>
-            Jawaban lengkap seputar lisensi, akses file, update materi seumur hidup, dan garansi.
+            Informasi seputar isi produk, akses materi, dan metode pembayaran.
           </p>
         </div>
 
@@ -34,13 +60,11 @@ export default function FAQSection() {
                 <button
                   type="button"
                   className={styles.questionBtn}
-                  onClick={() => toggleItem(idx)}
+                  onClick={() => setOpenIndex(isOpen ? null : idx)}
                   aria-expanded={isOpen}
                 >
                   <span>{faq.question}</span>
-                  <span className={`${styles.iconToggle} ${isOpen ? styles.iconRotated : ''}`}>
-                    +
-                  </span>
+                  <span className={`${styles.iconToggle} ${isOpen ? styles.iconRotated : ''}`}>+</span>
                 </button>
 
                 {isOpen && (

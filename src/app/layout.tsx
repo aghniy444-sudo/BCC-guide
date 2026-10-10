@@ -10,8 +10,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Educare - Toko Guidebook & Panduan Digital Praktis",
-  description: "Platform buku panduan digital berstandar industri dengan materi teruji, kode siap pakai, dan pembaruan seumur hidup gratis.",
+  title: "BCC Guide - Guide Book & Template Deck Business Case Competition",
+  description: "Guide book e-book dan 11 template deck presentasi untuk lomba business case competition. Pembayaran via QRIS.",
 };
 
 export default function RootLayout({

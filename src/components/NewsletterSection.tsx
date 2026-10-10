@@ -1,57 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './NewsletterSection.module.css';
 
-interface NewsletterSectionProps {
-  onShowToast: (message: string) => void;
-}
-
-export default function NewsletterSection({ onShowToast }: NewsletterSectionProps) {
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setIsSubmitted(true);
-    onShowToast(`Sample gratis 45 halaman telah dikirim ke ${email}! Silakan cek inbox Anda.`);
-    setEmail('');
-  };
-
+export default function NewsletterSection() {
   return (
     <section className="container">
       <div className={styles.newsletterCard}>
         <div className={styles.leftContent}>
-          <div className="badge-pill" style={{ alignSelf: 'flex-start' }}>
-            🎁 Sample Kit Gratis
-          </div>
+          <p className="eyebrow">Mulai Gratis</p>
           <h2 className={styles.cardTitle}>
-            Ingin Mencoba Dulu? Dapatkan <span className="text-gradient">45 Halaman Pertama</span> Gratis!
+            Daftar Akun dan Akses <span className="text-gradient">Deck Gratis</span>
           </h2>
           <p className={styles.cardDesc}>
-            Daftarkan email Anda dan kami akan mengirimkan PDF kompilasi bab awal panduan AI & Microservices lengkap dengan diagram arsitektur ke inbox Anda dalam 1 menit.
+            Buat akun untuk membuka tiga deck gratis, melihat info lomba, dan mengakses course
+            dasar business case competition di dashboard Anda.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.formBox}>
-          <div className={styles.inputGroup}>
-            <input
-              type="email"
-              required
-              placeholder="Masukkan email Anda..."
-              className={styles.emailInput}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button type="submit" className={styles.subscribeBtn}>
-              {isSubmitted ? 'Terkirim ✓' : 'Kirim Sample PDF'}
-            </button>
-          </div>
+        <div className={styles.formBox}>
+          <a href="#catalog" className="btn-primary" style={{ padding: '12px 28px', textDecoration: 'none' }}>
+            Lihat Produk
+          </a>
           <span className={styles.guaranteeNote}>
-            🔒 Bebas spam. Kami hanya mengirim materi panduan berkualitas tinggi.
+            Materi berbayar terbuka hanya setelah pembayaran terkonfirmasi.
           </span>
-        </form>
+        </div>
       </div>
     </section>
   );

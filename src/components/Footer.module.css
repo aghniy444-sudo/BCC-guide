@@ -84,23 +84,6 @@
   gap: 16px;
 }
 
-.paymentBadges {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.payBadge {
-  background: var(--color-ice);
-  border: 1px solid var(--color-sky);
-  color: var(--color-navy);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
 @media (max-width: 900px) {
   .footerGrid {
     grid-template-columns: 1fr 1fr;

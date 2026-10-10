@@ -145,8 +145,185 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 14px;
+  gap: 8px;
   color: var(--text-muted);
+}
+
+.emptyTitle {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.emptyHint {
+  font-size: 0.86rem;
+}
+
+.itemCategory {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* ---------------------------------------------------------------- order */
+
+.orderPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}
+
+.orderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.statusPending {
+  background: var(--color-ice);
+  color: var(--color-electric);
+}
+
+.statusPaid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.statusExpired {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.statusFailed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.orderMode {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.orderMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.orderMeta > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.orderMeta dt {
+  color: var(--text-muted);
+}
+
+.orderMeta dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.orderCode {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.qrisLink {
+  display: block;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  border: 1px solid var(--color-sky);
+  color: var(--color-electric);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.qrisLink:hover {
+  background: var(--color-ice);
+  border-color: var(--color-bright);
+}
+
+.orderNote {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.errorText {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--badge-discount-bg);
+}
+
+.totalValue {
+  color: var(--color-navy);
+}
+
+.secondaryBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1.5px solid var(--color-sky);
+  color: var(--color-electric);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover:not(:disabled) {
+  background: var(--color-ice);
+  border-color: var(--color-bright);
+}
+
+.secondaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.paidNote {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #15803d;
+}
+
+.demoNote {
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--text-light);
 }
 
 .voucherBox {

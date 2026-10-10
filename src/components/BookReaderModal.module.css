@@ -44,13 +44,10 @@
 }
 
 .badgePreview {
-  font-size: 0.76rem;
-  background: #ffffff;
-  border: 1px solid var(--color-sky);
-  color: var(--color-electric);
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-weight: 700;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 

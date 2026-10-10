@@ -1,9 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useLenis } from 'lenis/react';
 import styles from './Navbar.module.css';
+import { createClient } from '@/lib/supabase/browser';
 
 interface NavbarProps {
+  user: { email: string; role: 'admin' | 'user' } | null;
   onOpenSearch: () => void;
   onOpenLogin: () => void;
   onOpenCart: () => void;
@@ -19,14 +24,25 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar({
+  user,
   onOpenSearch,
   onOpenLogin,
   onOpenCart,
   cartCount,
 }: NavbarProps) {
+  const router = useRouter();
+  const lenis = useLenis();
   const [activeTab, setActiveTab] = useState('Home');
-  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.refresh();
+  };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const centerPillRef = useRef<HTMLElement | null>(null);
+  const navIndicatorRef = useRef<HTMLSpanElement | null>(null);
+  const indicatorReady = useRef(false);
 
   // Dynamic ScrollSpy and Scrolled State Detection
   useEffect(() => {
@@ -35,8 +51,6 @@ export default function Navbar({
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20);
-
           const scrollY = window.scrollY;
           const windowHeight = window.innerHeight;
           const docHeight = document.documentElement.scrollHeight;
@@ -97,23 +111,55 @@ export default function Navbar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Slide the white highlight to the active item instead of hard-swapping a
+  // class, so moving between sections animates rather than jumping.
+  useLayoutEffect(() => {
+    const updateIndicator = () => {
+      const container = centerPillRef.current;
+      const indicator = navIndicatorRef.current;
+      if (!container || !indicator) return;
+      const active = container.querySelector<HTMLElement>('[data-active="true"]');
+      if (!active) {
+        indicator.style.opacity = '0';
+        return;
+      }
+      const containerRect = container.getBoundingClientRect();
+      const rect = active.getBoundingClientRect();
+      if (rect.width === 0) return;
+      if (!indicatorReady.current) {
+        // Skip the transition on the very first placement so the pill does not
+        // fly in from the left corner on load.
+        indicator.style.transition = 'none';
+      }
+      indicator.style.width = `${rect.width}px`;
+      indicator.style.transform = `translateX(${rect.left - containerRect.left - container.clientLeft}px)`;
+      indicator.style.opacity = '1';
+      if (!indicatorReady.current) {
+        void indicator.offsetWidth;
+        indicator.style.transition = '';
+        indicatorReady.current = true;
+      }
+    };
+    updateIndicator();
+    const container = centerPillRef.current;
+    if (!container || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(updateIndicator);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [activeTab]);
+
   const handleNavClick = (name: string, href: string) => {
     setActiveTab(name);
     setMobileMenuOpen(false);
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
-    if (element) {
-      const navHeight = 75;
-      const elementTop = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: Math.max(0, elementTop - navHeight),
-        behavior: 'smooth',
-      });
-    }
+    if (!element) return;
+    if (lenis) lenis.scrollTo(element);
+    else element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <header className={`${styles.headerWrapper} ${isScrolled ? styles.headerScrolled : ''}`}>
+    <header className={styles.headerWrapper}>
       {/* Dimmed glass overlay behind mobile menu drawer */}
       {mobileMenuOpen && (
         <div
@@ -139,11 +185,12 @@ export default function Navbar({
               />
             </svg>
           </div>
-          <span className={styles.brandText}>Educare</span>
+          <span className={styles.brandText}>BCC Guide</span>
         </div>
 
         {/* Center Pill Navigation Capsule (Desktop Glassmorphism - Reference Photo 2) */}
-        <nav className={styles.centerPill} aria-label="Main Navigation">
+        <nav className={styles.centerPill} aria-label="Main Navigation" ref={centerPillRef}>
+          <span className={styles.navIndicator} ref={navIndicatorRef} aria-hidden="true" />
           {NAV_LINKS.map((item) => {
             const isActive = activeTab === item.name;
             return (
@@ -154,7 +201,8 @@ export default function Navbar({
                   e.preventDefault();
                   handleNavClick(item.name, item.href);
                 }}
-                className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                className={styles.navItem}
+                data-active={isActive ? 'true' : undefined}
                 aria-current={isActive ? 'page' : undefined}
               >
                 {item.name}
@@ -170,8 +218,8 @@ export default function Navbar({
             type="button"
             className={styles.searchBtn}
             onClick={onOpenSearch}
-            aria-label="Cari Guide Book"
-            title="Search Guide Books"
+            aria-label="Cari produk"
+            title="Cari produk"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" />
@@ -197,20 +245,47 @@ export default function Navbar({
             )}
           </button>
 
-          {/* Desktop Login Pill Button (Reference Photo 2 crisp white pill CTA) */}
-          <button
-            type="button"
-            className={styles.loginBtn}
-            onClick={onOpenLogin}
-            aria-label="Login atau Akun"
-          >
-            <div className={styles.loginAvatarCircle} aria-hidden="true">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
+          {/* Desktop Account Controls */}
+          {user ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <Link
+                href={user.role === 'admin' ? '/admin' : '/dashboard'}
+                className={styles.loginBtn}
+                aria-label="Buka dashboard"
+              >
+                <div className={styles.loginAvatarCircle} aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                </div>
+                <span className={styles.loginText}>
+                  {user.role === 'admin' ? 'Admin' : 'Dashboard'}
+                </span>
+              </Link>
+              <button
+                type="button"
+                className={styles.loginBtn}
+                onClick={handleLogout}
+                aria-label="Keluar"
+              >
+                <span className={styles.loginText}>Keluar</span>
+              </button>
             </div>
-            <span className={styles.loginText}>Login</span>
-          </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.loginBtn}
+              onClick={onOpenLogin}
+              aria-label="Login atau Akun"
+            >
+              <div className={styles.loginAvatarCircle} aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              </div>
+              <span className={styles.loginText}>Login</span>
+            </button>
+          )}
 
           {/* Mobile Cart Quick Icon (shows when cart has items) */}
           {cartCount > 0 && (
@@ -290,19 +365,44 @@ export default function Navbar({
                 <span>Keranjang ({cartCount})</span>
               </button>
 
-              <button
-                type="button"
-                className={styles.mobileLoginPill}
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenLogin();
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-                <span>Login</span>
-              </button>
+              {user ? (
+                <>
+                  <Link
+                    href={user.role === 'admin' ? '/admin' : '/dashboard'}
+                    className={styles.mobileLoginPill}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    <span>{user.role === 'admin' ? 'Admin' : 'Dashboard'}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    className={styles.mobileLoginPill}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <span>Keluar</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.mobileLoginPill}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenLogin();
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                  <span>Login</span>
+                </button>
+              )}
             </div>
 
             <div className={styles.mobileDivider} />

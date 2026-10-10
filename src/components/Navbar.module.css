@@ -9,19 +9,7 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.headerScrolled {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(20px) saturate(190%);
-  -webkit-backdrop-filter: blur(20px) saturate(190%);
-  border-bottom: 1px solid rgba(0, 78, 224, 0.08);
-  box-shadow: 0 4px 20px rgba(4, 46, 123, 0.06);
+  background: transparent;
 }
 
 .navContainer {
@@ -84,6 +72,7 @@
    Center Pill Navigation Capsule (Reference Photo 2 Glass Capsule)
    -------------------------------------------------------------------------- */
 .centerPill {
+  position: relative;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.55);
@@ -102,14 +91,35 @@
   box-shadow: 0 6px 24px rgba(4, 46, 123, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
 }
 
+/* The white capsule that glides between items. Position and width are set by
+   the component so the highlight animates instead of appearing instantly. */
+.navIndicator {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: calc(100% - 8px);
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid rgba(0, 78, 224, 0.06);
+  box-shadow: 0 2px 10px rgba(4, 46, 123, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease;
+}
+
 .navItem {
+  position: relative;
+  z-index: 1;
   padding: 8px 20px;
   border-radius: var(--radius-pill);
   font-size: 0.92rem;
   font-weight: 500;
   color: #334155;
   text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.3s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -117,18 +127,15 @@
   user-select: none;
 }
 
-.navItem:hover {
+.navItem:not([data-active='true']):hover {
   color: var(--color-electric);
   background: rgba(255, 255, 255, 0.65);
 }
 
-/* Active Pill (matches the solid white capsule in Reference Photo 2) */
-.navItemActive {
-  background: #ffffff !important;
-  color: var(--color-navy) !important;
-  font-weight: 600 !important;
-  box-shadow: 0 2px 10px rgba(4, 46, 123, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 78, 224, 0.06);
+/* Active label sits on top of the sliding capsule. */
+.navItem[data-active='true'] {
+  color: var(--color-navy);
+  font-weight: 600;
 }
 
 /* --------------------------------------------------------------------------

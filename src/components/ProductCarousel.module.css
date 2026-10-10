@@ -1,0 +1,383 @@
+/* ==========================================================================
+   Featured product carousel (3D fan deck)
+   ========================================================================== */
+
+/* 3D Fan Deck Carousel Stage */
+.fanDeckContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1060px;
+  margin: 20px auto 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardsTrack {
+  position: relative;
+  width: 100%;
+  height: 610px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+/* Base Booklet Card */
+.bookCard {
+  position: absolute;
+  width: 320px;
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  border: 1.5px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.55s cubic-bezier(0.34, 1.25, 0.64, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease,
+              opacity 0.4s ease,
+              filter 0.4s ease;
+  will-change: transform, box-shadow;
+}
+
+/* Position: Left Card */
+.cardLeft {
+  transform: translate3d(-180px, 26px, -40px) rotate(-6.5deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.88;
+  filter: brightness(0.96);
+  cursor: pointer;
+}
+
+.cardLeft:hover {
+  transform: translate3d(-180px, 14px, -15px) rotate(-4.5deg) scale(0.94);
+  opacity: 1;
+  filter: brightness(1);
+  box-shadow: 0 16px 36px -8px rgba(4, 46, 123, 0.16);
+}
+
+/* Position: Center Card */
+.cardCenter {
+  transform: translate3d(0, -12px, 50px) rotate(0deg) scale(1.06);
+  z-index: 10;
+  opacity: 1;
+  filter: brightness(1);
+  border-color: var(--color-bright);
+  box-shadow: 0 25px 60px -12px rgba(4, 46, 123, 0.22), 0 0 0 2px var(--color-ice);
+  cursor: default;
+}
+
+.cardCenter:hover {
+  transform: translate3d(0, -18px, 60px) rotate(0deg) scale(1.08);
+  box-shadow: 0 30px 70px -12px rgba(4, 46, 123, 0.28), 0 0 0 3px var(--color-sky);
+}
+
+/* Position: Right Card */
+.cardRight {
+  transform: translate3d(180px, 26px, -40px) rotate(6.5deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.88;
+  filter: brightness(0.96);
+  cursor: pointer;
+}
+
+.cardRight:hover {
+  transform: translate3d(180px, 14px, -15px) rotate(4.5deg) scale(0.94);
+  opacity: 1;
+  filter: brightness(1);
+  box-shadow: 0 16px 36px -8px rgba(4, 46, 123, 0.16);
+}
+
+/* Cards beyond the visible fan: kept in the deck but out of sight. */
+.cardHidden {
+  transform: translate3d(0, 26px, -80px) scale(0.85);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Book Cover Visual */
+.coverWrapper {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #f1f5f9;
+  box-shadow: 0 6px 18px rgba(4, 46, 123, 0.08);
+}
+
+.coverImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: linear-gradient(160deg, #042e7b, #004ee0);
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  transition: transform 0.4s ease;
+}
+
+.bookCard:hover .coverImg {
+  transform: scale(1.03);
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.bookCard:hover .coverImage {
+  transform: scale(1.03);
+}
+
+.coverSheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 50%, rgba(0, 78, 224, 0.05) 100%);
+  pointer-events: none;
+}
+
+/* Card Bottom Meta */
+.cardMetaPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.cardCategory {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.3;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardSubtitleSnippet {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.activePrice {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-electric);
+}
+
+/* Quick Card Actions (Visible when active) */
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-light);
+  animation: fadeInActions 0.3s ease;
+}
+
+@keyframes fadeInActions {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btnCardPreview {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ice);
+  color: var(--color-electric);
+  border: 1px solid var(--color-sky);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btnCardPreview:hover {
+  background: #d5e9fd;
+  color: var(--color-navy);
+  transform: translateY(-1px);
+}
+
+.btnCardBuy {
+  flex: 1.3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--color-electric) 0%, var(--color-bright) 100%);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 78, 224, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btnCardBuy:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 78, 224, 0.45);
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-electric) 100%);
+}
+
+/* Nav Arrows */
+.navArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid var(--border-subtle);
+  color: var(--color-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(4, 46, 123, 0.12);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.navArrowLeft {
+  left: -20px;
+}
+
+.navArrowRight {
+  right: -20px;
+}
+
+.navArrow:hover {
+  background: var(--color-ice);
+  color: var(--color-electric);
+  border-color: var(--color-bright);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 12px 28px rgba(0, 78, 224, 0.2);
+}
+
+/* Deck Indicators */
+.deckIndicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px auto 26px;
+}
+
+.indicatorDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.dotNumber {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.indicatorDot:hover {
+  border-color: var(--color-sky);
+  color: var(--color-electric);
+}
+
+.indicatorDotActive {
+  background: var(--color-ice);
+  border-color: var(--color-bright);
+  color: var(--color-electric);
+  box-shadow: 0 4px 12px rgba(0, 78, 224, 0.12);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .cardsTrack {
+    height: 570px;
+  }
+  .cardLeft {
+    transform: translate3d(-110px, 20px, -30px) rotate(-5deg) scale(0.85);
+  }
+  .cardRight {
+    transform: translate3d(110px, 20px, -30px) rotate(5deg) scale(0.85);
+  }
+  .cardCenter {
+    transform: translate3d(0, -10px, 30px) rotate(0deg) scale(1.02);
+  }
+  .navArrowLeft {
+    left: 4px;
+  }
+  .navArrowRight {
+    right: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cardsTrack {
+    height: 520px;
+  }
+  .bookCard {
+    width: 280px;
+    padding: 12px;
+  }
+  .cardLeft {
+    transform: translate3d(-60px, 16px, -20px) rotate(-4deg) scale(0.8);
+    opacity: 0.6;
+  }
+  .cardRight {
+    transform: translate3d(60px, 16px, -20px) rotate(4deg) scale(0.8);
+    opacity: 0.6;
+  }
+  .cardCenter {
+    transform: translate3d(0, -6px, 20px) scale(0.98);
+  }
+}

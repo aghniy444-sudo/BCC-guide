@@ -1,42 +1,79 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './LoginModal.module.css';
+import { createClient } from '@/lib/supabase/browser';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (email: string) => void;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
-  const [isLoginTab, setIsLoginTab] = useState(true);
+type Mode = 'login' | 'register';
+
+export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const router = useRouter();
+  const [mode, setMode] = useState<Mode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const isLogin = mode === 'login';
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    setError(null);
+    setNotice(null);
+
+    if (!isLogin && password.length < 8) {
+      setError('Kata sandi minimal 8 karakter.');
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    const supabase = createClient();
+    try {
+      if (isLogin) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInError) {
+          setError(signInError.message);
+          return;
+        }
+        onClose();
+        router.refresh();
+      } else {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (signUpError) {
+          setError(signUpError.message);
+          return;
+        }
+        if (!data.session) {
+          setNotice('Akun dibuat. Silakan cek email untuk verifikasi sebelum masuk.');
+          return;
+        }
+        onClose();
+        router.refresh();
+      }
+    } finally {
       setLoading(false);
-      onLoginSuccess(email);
-      onClose();
-    }, 800);
+    }
   };
 
   return (
     <div className={styles.loginOverlay} onClick={onClose} role="dialog" aria-modal="true">
       <div className={styles.loginCard} onClick={(e) => e.stopPropagation()}>
-        <button
-          type="button"
-          className={styles.closeBtn}
-          onClick={onClose}
-          aria-label="Tutup"
-        >
+        <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Tutup">
           ✕
         </button>
 
@@ -48,26 +85,34 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           </div>
           <div>
             <h3 className={styles.loginTitle}>
-              {isLoginTab ? 'Masuk ke Educare' : 'Daftar Akun Baru'}
+              {isLogin ? 'Masuk ke BCC Guide' : 'Daftar Akun Baru'}
             </h3>
             <p className={styles.loginSubtitle}>
-              {isLoginTab
-                ? 'Akses perpustakaan panduan digital dan link download Anda'
-                : 'Mulai perjalanan belajar dengan akses materi terdepan'}
+              {isLogin
+                ? 'Akses guide book, template deck, dan dashboard Anda'
+                : 'Buat akun untuk mengakses deck gratis dan materi BCC'}
             </p>
           </div>
         </div>
 
         <div className={styles.tabToggle}>
           <div
-            className={`${styles.tabBtn} ${isLoginTab ? styles.tabBtnActive : ''}`}
-            onClick={() => setIsLoginTab(true)}
+            className={`${styles.tabBtn} ${isLogin ? styles.tabBtnActive : ''}`}
+            onClick={() => {
+              setMode('login');
+              setError(null);
+              setNotice(null);
+            }}
           >
             Masuk
           </div>
           <div
-            className={`${styles.tabBtn} ${!isLoginTab ? styles.tabBtnActive : ''}`}
-            onClick={() => setIsLoginTab(false)}
+            className={`${styles.tabBtn} ${!isLogin ? styles.tabBtnActive : ''}`}
+            onClick={() => {
+              setMode('register');
+              setError(null);
+              setNotice(null);
+            }}
           >
             Daftar
           </div>
@@ -91,56 +136,33 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <input
               type="password"
               required
-              placeholder="Minimal 8 karakter"
+              minLength={isLogin ? undefined : 8}
+              placeholder={isLogin ? 'Kata sandi Anda' : 'Minimal 8 karakter'}
               className={styles.textInput}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          <button
-            type="submit"
-            className={styles.submitBtn}
-            disabled={loading}
-          >
-            {loading ? 'Memproses...' : isLoginTab ? 'Masuk Sekarang' : 'Buat Akun Gratis'}
+          {error && (
+            <div style={{ color: '#f87171', fontSize: '0.82rem', fontWeight: 500 }}>
+              {error}
+            </div>
+          )}
+          {notice && (
+            <div style={{ color: '#4ade80', fontSize: '0.82rem', fontWeight: 500 }}>
+              {notice}
+            </div>
+          )}
+
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? 'Memproses...' : isLogin ? 'Masuk Sekarang' : 'Buat Akun'}
           </button>
         </form>
 
-        <div className={styles.oauthDivider}>
-          <div className={styles.dividerLine} />
-          <span>atau lanjutkan dengan</span>
-          <div className={styles.dividerLine} />
-        </div>
-
-        <button
-          type="button"
-          className={styles.oauthBtn}
-          onClick={() => {
-            onLoginSuccess('user.google@gmail.com');
-            onClose();
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path
-              fill="#EA4335"
-              d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-2.9c-.3-.7-.5-1.5-.5-2.4z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17C3.7 20.7 7.5 23.5 12 23.5z"
-            />
-          </svg>
-          <span>Lanjutkan dengan Google</span>
-        </button>
+        <p style={{ fontSize: '0.74rem', color: '#9794bf', textAlign: 'center', marginTop: '14px' }}>
+          Autentikasi aman via Supabase.
+        </p>
       </div>
     </div>
   );

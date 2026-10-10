@@ -1,141 +1,174 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './CartDrawer.module.css';
-import { Book } from '@/data/booksData';
+import CheckoutAuth from './CheckoutAuth';
+import { formatRupiah, type CatalogItem } from '@/data/catalog';
 
-export interface CartItem {
-  book: Book;
-  quantity: number;
+interface OrderView {
+  id: string;
+  status: 'pending' | 'paid' | 'expired' | 'failed';
+  provider: 'klikqris';
+  total_idr: number;
+  gateway_order_id: string;
+  qris_url: string | null;
+  payment_url: string | null;
+  expires_at: string | null;
 }
+
+const STATUS_LABEL: Record<OrderView['status'], string> = {
+  pending: 'Menunggu pembayaran',
+  paid: 'Pembayaran terkonfirmasi',
+  expired: 'Kedaluwarsa',
+  failed: 'Gagal',
+};
+
+const STATUS_CLASS: Record<OrderView['status'], string> = {
+  pending: styles.statusPending,
+  paid: styles.statusPaid,
+  expired: styles.statusExpired,
+  failed: styles.statusFailed,
+};
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  items: CartItem[];
-  onRemoveItem: (bookId: string) => void;
-  onCheckoutSuccess: () => void;
+  items: CatalogItem[];
+  isLoggedIn: boolean;
+  onRemoveItem: (productId: string) => void;
+  onOrderPaid: () => void;
 }
 
 export default function CartDrawer({
   isOpen,
   onClose,
   items,
+  isLoggedIn,
   onRemoveItem,
-  onCheckoutSuccess,
+  onOrderPaid,
 }: CartDrawerProps) {
-  const [voucherCode, setVoucherCode] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
-  const [voucherMsg, setVoucherMsg] = useState<{ text: string; success: boolean } | null>(null);
+  const router = useRouter();
+  const [order, setOrder] = useState<OrderView | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
+  const subtotal = items.reduce((sum, item) => sum + item.price_idr, 0);
+
+  const refreshOrder = useCallback(async (orderId: string) => {
+    const res = await fetch(`/api/orders/${orderId}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    setOrder(data.order as OrderView);
+    return data.order as OrderView;
+  }, []);
+
+  // Poll the order while it is still awaiting payment.
+  useEffect(() => {
+    if (!order || order.status !== 'pending') return;
+    const id = setInterval(() => {
+      refreshOrder(order.id);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [order, refreshOrder]);
+
+  const settledOrderId = useRef<string | null>(null);
+
+  // Clear the cart once, when an order first reports as paid. Guarding on the
+  // order id keeps the callback from firing on every re-render.
+  useEffect(() => {
+    if (!order || order.status !== 'paid') return;
+    if (settledOrderId.current === order.id) return;
+    settledOrderId.current = order.id;
+    onOrderPaid();
+  }, [order, onOrderPaid]);
 
   if (!isOpen) return null;
 
-  const rawSubtotal = items.reduce(
-    (sum, item) => sum + item.book.price * item.quantity,
-    0
-  );
-
-  const discountAmount = (rawSubtotal * appliedDiscount) / 100;
-  const grandTotal = Math.max(0, rawSubtotal - discountAmount);
-
-  const formatRupiah = (num: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0,
-    }).format(num);
-  };
-
-  const handleApplyVoucher = () => {
-    if (voucherCode.trim().toUpperCase() === 'EDUCARE20') {
-      setAppliedDiscount(20);
-      setVoucherMsg({ text: 'Kupon diskon 20% berhasil diterapkan!', success: true });
-    } else if (voucherCode.trim().toUpperCase() === 'HEMAT50') {
-      setAppliedDiscount(50);
-      setVoucherMsg({ text: 'Kupon Super Hemat 50% aktif!', success: true });
-    } else {
-      setVoucherMsg({ text: 'Kupon tidak valid. Coba: EDUCARE20', success: false });
+  const createOrder = async () => {
+    setError(null);
+    setIsProcessing(true);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productIds: items.map((i) => i.id) }),
+      });
+      const data = await res.json();
+      if (res.status === 401) {
+        setShowAuth(true);
+        return;
+      }
+      if (!res.ok) {
+        setError(data.error ?? 'Checkout gagal.');
+        return;
+      }
+      setOrder(data.order as OrderView);
+    } catch {
+      setError('Tidak dapat menghubungi server checkout.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const handleCheckout = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      onCheckoutSuccess();
-      onClose();
-    }, 1200);
+    if (!isLoggedIn) {
+      setShowAuth(true);
+      return;
+    }
+    createOrder();
   };
+
+  const handleAuthenticated = () => {
+    setShowAuth(false);
+    router.refresh();
+    // The session cookie is already set by the client, so the order can be
+    // created immediately without waiting for the refresh.
+    createOrder();
+  };
+
+  const expiresLabel = order?.expires_at
+    ? new Date(order.expires_at).toLocaleString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : null;
 
   return (
     <div className={styles.drawerOverlay} onClick={onClose} role="dialog" aria-modal="true">
       <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
         <div className={styles.drawerHeader}>
           <div className={styles.drawerTitle}>
-            <span>Keranjang Belanja</span>
-            <span className={styles.itemCountBadge}>
-              {items.length} Buku
-            </span>
+            <span>Keranjang</span>
+            <span className={styles.itemCountBadge}>{items.length} item</span>
           </div>
-          <button
-            type="button"
-            className={styles.closeBtn}
-            onClick={onClose}
-            aria-label="Tutup keranjang"
-          >
+          <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Tutup keranjang">
             ✕
           </button>
         </div>
 
-        {/* Body */}
         <div className={styles.drawerBody}>
-          {items.length === 0 ? (
+          {items.length === 0 && !order ? (
             <div className={styles.emptyState}>
-              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#7e7ca8" strokeWidth="1.5">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-2z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 0 1-8 0" />
-              </svg>
-              <div style={{ color: '#ffffff', fontWeight: 600, fontSize: '1.05rem' }}>
-                Keranjang Masih Kosong
-              </div>
-              <p style={{ fontSize: '0.88rem' }}>
-                Pilih panduan dari katalog untuk mulai memperdalam keahlian Anda hari ini.
-              </p>
+              <p className={styles.emptyTitle}>Keranjang masih kosong</p>
+              <p className={styles.emptyHint}>Pilih produk dari katalog untuk memulai.</p>
             </div>
           ) : (
             <>
               {items.map((item) => (
-                <div key={item.book.id} className={styles.cartItem}>
-                  <div className={styles.itemThumb}>
-                    <Image
-                      src={item.book.coverImage}
-                      alt={item.book.title}
-                      width={60}
-                      height={80}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </div>
-
+                <div key={item.id} className={styles.cartItem}>
                   <div className={styles.itemInfo}>
-                    <div>
-                      <div className={styles.itemTitle}>{item.book.title}</div>
-                      <div style={{ fontSize: '0.76rem', color: '#a78bfa', marginTop: '2px' }}>
-                        {item.book.categoryLabel}
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span className={styles.itemPrice}>
-                        {formatRupiah(item.book.price)}
-                      </span>
+                    <div className={styles.itemTitle}>{item.title}</div>
+                    <div className={styles.itemCategory}>{item.categoryLabel}</div>
+                    <div className={styles.itemRow}>
+                      <span className={styles.itemPrice}>{formatRupiah(item.price_idr)}</span>
                       <button
                         type="button"
                         className={styles.deleteBtn}
-                        onClick={() => onRemoveItem(item.book.id)}
+                        onClick={() => onRemoveItem(item.id)}
                       >
                         Hapus
                       </button>
@@ -144,72 +177,134 @@ export default function CartDrawer({
                 </div>
               ))}
 
-              {/* Voucher */}
-              <div className={styles.voucherBox}>
-                <input
-                  type="text"
-                  placeholder="Kode Kupon (contoh: EDUCARE20)"
-                  className={styles.voucherInput}
-                  value={voucherCode}
-                  onChange={(e) => setVoucherCode(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className={styles.voucherBtn}
-                  onClick={handleApplyVoucher}
-                >
-                  Terapkan
-                </button>
-              </div>
+              {showAuth && !isLoggedIn ? (
+                <CheckoutAuth onAuthenticated={handleAuthenticated} onCancel={() => setShowAuth(false)} />
+              ) : null}
 
-              {voucherMsg && (
-                <div style={{
-                  fontSize: '0.8rem',
-                  color: voucherMsg.success ? '#4ade80' : '#f87171',
-                  fontWeight: 500,
-                  marginTop: '-8px'
-                }}>
-                  {voucherMsg.text}
+              {order ? (
+                <div className={styles.orderPanel}>
+                  <div className={styles.orderHead}>
+                    <span className={`${styles.status} ${STATUS_CLASS[order.status]}`}>
+                      {STATUS_LABEL[order.status]}
+                    </span>
+                    <span className={styles.orderMode}>QRIS</span>
+                  </div>
+
+                  <dl className={styles.orderMeta}>
+                    <div>
+                      <dt>Kode order</dt>
+                      <dd className={styles.orderCode}>{order.gateway_order_id}</dd>
+                    </div>
+                    <div>
+                      <dt>Total</dt>
+                      <dd>{formatRupiah(order.total_idr)}</dd>
+                    </div>
+                    {order.status === 'pending' && expiresLabel ? (
+                      <div>
+                        <dt>Bayar sebelum</dt>
+                        <dd>{expiresLabel} WIB</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+
+                  {order.status === 'pending' && order.payment_url ? (
+                    <a
+                      className={styles.qrisLink}
+                      href={order.payment_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Buka halaman pembayaran QRIS
+                    </a>
+                  ) : null}
+
+                  {order.status === 'pending' && order.qris_url ? (
+                    <a
+                      className={styles.qrisLink}
+                      href={order.qris_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Tampilkan gambar QRIS
+                    </a>
+                  ) : null}
+
+                  {order.status === 'pending' ? (
+                    <p className={styles.orderNote}>
+                      Selesaikan pembayaran sesuai nominal di atas. Status akan diperbarui otomatis
+                      setelah pembayaran diterima.
+                    </p>
+                  ) : null}
+
+                  {order.status === 'paid' ? (
+                    <p className={styles.orderNote}>
+                      Materi sudah terbuka. Buka dashboard untuk mengunduh.
+                    </p>
+                  ) : null}
+
+                  {order.status === 'expired' ? (
+                    <p className={styles.orderNote}>
+                      Batas waktu pembayaran habis. Buat pesanan baru untuk mencoba lagi.
+                    </p>
+                  ) : null}
+
+                  {order.status === 'failed' ? (
+                    <p className={styles.orderNote}>
+                      Pesanan gagal dibuat. Silakan hubungi kami atau coba lagi.
+                    </p>
+                  ) : null}
                 </div>
-              )}
+              ) : null}
+
+              {error ? (
+                <p className={styles.errorText} role="alert">
+                  {error}
+                </p>
+              ) : null}
             </>
           )}
         </div>
 
-        {/* Footer */}
-        {items.length > 0 && (
+        {(items.length > 0 || order) && (
           <div className={styles.drawerFooter}>
-            <div className={styles.summaryRow}>
-              <span>Subtotal ({items.length} items)</span>
-              <span>{formatRupiah(rawSubtotal)}</span>
-            </div>
-
-            {appliedDiscount > 0 && (
-              <div className={styles.summaryRow} style={{ color: '#4ade80' }}>
-                <span>Diskon Kupon ({appliedDiscount}%)</span>
-                <span>-{formatRupiah(discountAmount)}</span>
-              </div>
-            )}
-
             <div className={styles.totalRow}>
-              <span>Total Pembayaran</span>
-              <span style={{ color: '#ffffff', fontFamily: 'Outfit' }}>
-                {formatRupiah(grandTotal)}
+              <span>Total</span>
+              <span className={styles.totalValue}>
+                {formatRupiah(order ? order.total_idr : subtotal)}
               </span>
             </div>
 
-            <button
-              type="button"
-              className={styles.checkoutBtn}
-              onClick={handleCheckout}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Memproses Pesanan...' : 'Lanjutkan Pembayaran Instan'}
-            </button>
+            {!order && !showAuth ? (
+              <button
+                type="button"
+                className={styles.checkoutBtn}
+                onClick={handleCheckout}
+                disabled={isProcessing}
+              >
+                {isProcessing
+                  ? 'Memproses...'
+                  : isLoggedIn
+                    ? 'Lanjutkan ke Pembayaran'
+                    : 'Masuk untuk Checkout'}
+              </button>
+            ) : null}
 
-            <div style={{ textAlign: 'center', fontSize: '0.74rem', color: '#9794bf' }}>
-              🔒 Transaksi Aman • Akses Link Unduh Langsung Dikirim ke Email
-            </div>
+            {order && order.status === 'pending' ? (
+              <button
+                type="button"
+                className={styles.secondaryBtn}
+                onClick={() => refreshOrder(order.id)}
+                disabled={isProcessing}
+              >
+                Perbarui status
+              </button>
+            ) : null}
+
+            {order && order.status === 'paid' ? (
+              <div className={styles.paidNote}>Selesai — cek dashboard untuk mengunduh materi.</div>
+            ) : null}
+
+            <p className={styles.demoNote}>Pembayaran aman melalui KlikQRIS</p>
           </div>
         )}
       </div>

@@ -1,0 +1,45 @@
+.reveal {
+  opacity: 0;
+  /* Contain each section's horizontal overflow (the hero card fan bleeds past
+     the viewport) without clipping vertical content or shadows. */
+  overflow-x: clip;
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Distinct entrance directions so consecutive sections do not feel identical. */
+.up {
+  transform: translateY(48px);
+}
+
+.left {
+  transform: translateX(-56px);
+}
+
+.right {
+  transform: translateX(56px);
+}
+
+.zoom {
+  transform: scale(0.88);
+}
+
+.blur {
+  filter: blur(14px);
+  transform: translateY(28px) scale(0.98);
+}
+
+.rotate {
+  transform: rotate(-3.5deg) scale(0.94);
+  transform-origin: left center;
+}
+
+/* Set by Reveal once the element scrolls into view. Declared after the
+   variants so it wins at equal specificity. */
+.reveal[data-reveal='shown'] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
