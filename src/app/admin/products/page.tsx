@@ -4,7 +4,9 @@ import { formatRupiah } from '@/data/catalog';
 import { getActiveProfile } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
 import { productImageUrl } from '@/lib/storage';
+import { PRODUCT_IMAGE_MAX_BYTES, PRODUCT_IMAGE_MAX_LABEL } from '@/lib/upload';
 import type { Product } from '@/lib/types';
+import LimitedFileInput from '@/components/LimitedFileInput';
 import { createProduct, deleteProduct, updateProduct } from '../actions';
 import styles from '@/components/PanelContent.module.css';
 
@@ -47,10 +49,20 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           Harga (Rp)
           <input name="price_idr" type="number" min="1" className={styles.input} required />
         </label>
-        <label className={styles.field}>
-          Gambar display <span className={styles.note}>PNG, JPG, atau WEBP · maks 5 MB</span>
-          <input name="image" type="file" accept="image/png,image/jpeg,image/webp" className={styles.input} />
-        </label>
+        <LimitedFileInput
+          name="image"
+          accept="image/png,image/jpeg,image/webp"
+          maxBytes={PRODUCT_IMAGE_MAX_BYTES}
+          maxLabel={PRODUCT_IMAGE_MAX_LABEL}
+          fieldClassName={styles.field}
+          inputClassName={styles.input}
+          errorClassName={styles.fieldError}
+        >
+          Gambar display{' '}
+          <span className={styles.note}>
+            PNG, JPG, atau WEBP · maks {PRODUCT_IMAGE_MAX_LABEL}
+          </span>
+        </LimitedFileInput>
         <label className={styles.field}>
           Status
           <select name="active" defaultValue="true" className={styles.select}>
@@ -95,10 +107,18 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   Harga (Rp) <span className={styles.note}>saat ini {formatRupiah(product.price_idr)}</span>
                   <input name="price_idr" type="number" defaultValue={product.price_idr} className={styles.input} />
                 </label>
-                <label className={styles.field}>
-                  Ganti gambar <span className={styles.note}>biarkan kosong bila tidak diubah</span>
-                  <input name="image" type="file" accept="image/png,image/jpeg,image/webp" className={styles.input} />
-                </label>
+                <LimitedFileInput
+                  name="image"
+                  accept="image/png,image/jpeg,image/webp"
+                  maxBytes={PRODUCT_IMAGE_MAX_BYTES}
+                  maxLabel={PRODUCT_IMAGE_MAX_LABEL}
+                  fieldClassName={styles.field}
+                  inputClassName={styles.input}
+                  errorClassName={styles.fieldError}
+                >
+                  Ganti gambar{' '}
+                  <span className={styles.note}>biarkan kosong bila tidak diubah</span>
+                </LimitedFileInput>
                 {image ? (
                   <label className={styles.checkRow}>
                     <input type="checkbox" name="remove_image" value="true" /> Hapus gambar

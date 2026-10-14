@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { Empty, ErrorBanner, PageHeader, QueryError } from '@/components/PanelContent';
 import { getActiveProfile } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service';
+import { ASSET_MAX_BYTES, ASSET_MAX_LABEL } from '@/lib/upload';
+import LimitedFileInput from '@/components/LimitedFileInput';
 import type { Asset } from '@/lib/types';
 import { deleteAsset, saveAsset } from '../actions';
 import styles from '@/components/PanelContent.module.css';
@@ -41,7 +43,18 @@ export default async function AssetsPage({ searchParams }: { searchParams: Promi
             ))}
         </select>
         <input name="title" placeholder="Judul aset" className={styles.input} />
-        <input type="file" name="file" accept=".pdf,.pptx" className={styles.input} />
+        <LimitedFileInput
+          name="file"
+          accept=".pdf,.pptx"
+          maxBytes={ASSET_MAX_BYTES}
+          maxLabel={ASSET_MAX_LABEL}
+          fieldClassName={styles.field}
+          inputClassName={styles.input}
+          errorClassName={styles.fieldError}
+        >
+          Berkas aset{' '}
+          <span className={styles.note}>PDF atau PPTX · maks {ASSET_MAX_LABEL}</span>
+        </LimitedFileInput>
         <label className={styles.checkRow}>
           <input type="checkbox" name="published" value="true" defaultChecked /> Publish
         </label>
@@ -51,7 +64,7 @@ export default async function AssetsPage({ searchParams }: { searchParams: Promi
         <button type="submit" className={styles.button}>
           Unggah
         </button>
-        <div className={styles.note}>Maks 25 MB, PDF/PPTX saja.</div>
+        <div className={styles.note}>Maks {ASSET_MAX_LABEL}, PDF/PPTX saja.</div>
       </form>
 
       {error ? (

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getActiveProfile } from '@/lib/supabase/server';
 import { createServiceClient, type ServiceClient } from '@/lib/supabase/service';
+import { ASSET_MAX_BYTES, ASSET_MAX_LABEL, PRODUCT_IMAGE_MAX_BYTES, PRODUCT_IMAGE_MAX_LABEL } from '@/lib/upload';
 import type { AssetKind, PostType } from '@/lib/types';
 
 async function requireAdmin() {
@@ -100,13 +101,15 @@ const PRODUCT_ID = /^[a-z0-9][a-z0-9-]{1,30}$/;
 async function uploadProductImage(svc: ServiceClient, file: File) {
   const ext = PRODUCT_IMAGE_MIME[file.type];
   if (!ext) throw new Error('Gambar harus PNG, JPG, atau WEBP.');
-  if (file.size > 5 * 1024 * 1024) throw new Error('Ukuran gambar melebihi 5 MB.');
+  if (file.size > PRODUCT_IMAGE_MAX_BYTES) {
+    throw new Error(`Ukuran gambar melebihi ${PRODUCT_IMAGE_MAX_LABEL}.`);
+  }
   const path = `${crypto.randomUUID()}.${ext}`;
   const bytes = Buffer.from(await file.arrayBuffer());
   const { error } = await svc.storage
     .from('product-images')
     .upload(path, bytes, { contentType: file.type, upsert: false });
-  if (error) throw new Error('Upload gambar gagal.');
+  if (error) throw new Error(`Upload gambar gagal: ${error.message}`);
   return path;
 }
 
@@ -248,7 +251,6 @@ export async function updateProduct(formData: FormData) {
 }
 
 // ---------------------------------------------------------------- assets
-const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 const ALLOWED_MIME: Record<string, string> = {
   'application/pdf': 'pdf',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
@@ -273,7 +275,7 @@ export async function saveAsset(formData: FormData) {
     if (!title) throw new Error('Judul aset wajib diisi.');
 
     if (file instanceof File && file.size > 0) {
-      if (file.size > MAX_UPLOAD_BYTES) throw new Error('Ukuran file melebihi 25 MB.');
+      if (file.size > ASSET_MAX_BYTES) throw new Error(`Ukuran file melebihi ${ASSET_MAX_LABEL}.`);
       const ext = ALLOWED_MIME[file.type];
       if (!ext || !file.name.toLowerCase().endsWith(`.${ext}`)) {
         throw new Error('Tipe file harus PDF atau PPTX.');
@@ -284,7 +286,7 @@ export async function saveAsset(formData: FormData) {
       const { error: upErr } = await svc.storage
         .from('content')
         .upload(storagePath, bytes, { contentType: file.type, upsert: false });
-      if (upErr) throw new Error('Upload file gagal.');
+      if (upErr) throw new Error(`Upload file gagal: ${upErr.message}`);
 
       if (assetId) {
         const { data: existing } = await svc

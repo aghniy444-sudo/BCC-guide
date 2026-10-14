@@ -32,6 +32,12 @@
   font-weight: 600;
 }
 
+.fieldError {
+  color: #991b1b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .empty,
 .locked {
   display: flex;
