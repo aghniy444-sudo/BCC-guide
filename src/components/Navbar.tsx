@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLenis } from 'lenis/react';
@@ -170,21 +171,21 @@ export default function Navbar({
       )}
 
       <div className={styles.navContainer}>
-        {/* Brand Logo with 4-point sparkle star from reference photo */}
+        {/* Brand Logo — BG monogram */}
         <div 
           className={styles.brand} 
           onClick={() => handleNavClick('Home', '#hero')}
           role="button"
           tabIndex={0}
         >
-          <div className={styles.brandIcon} aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2C12 7.52285 16.4772 12 22 12C16.4772 12 12 16.4772 12 22C12 16.4772 7.52285 12 2 12C7.52285 12 12 7.52285 12 2Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+          <Image
+            src="/bg-logo.png"
+            alt="BCC Guide"
+            width={526}
+            height={379}
+            className={styles.brandIcon}
+            priority
+          />
           <span className={styles.brandText}>BCC Guide</span>
         </div>
 

@@ -40,24 +40,17 @@
 }
 
 .brandIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-electric);
+  display: block;
+  height: 34px;
+  width: auto;
+  object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 78, 224, 0.25));
-  animation: pulseSparkle 4s ease-in-out infinite;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-@keyframes pulseSparkle {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.95;
-  }
-  50% {
-    transform: scale(1.08) rotate(5deg);
-    opacity: 1;
-    filter: drop-shadow(0 4px 10px rgba(0, 78, 224, 0.4));
-  }
+.brand:hover .brandIcon {
+  transform: scale(1.05) rotate(-2deg);
+  filter: drop-shadow(0 4px 10px rgba(0, 78, 224, 0.4));
 }
 
 .brandText {

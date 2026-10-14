@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React from 'react';
 import styles from './Footer.module.css';
 
@@ -10,12 +11,13 @@ export default function Footer() {
         <div className={styles.footerGrid}>
           <div className={styles.brandCol}>
             <div className={styles.brandRow}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2C12 7.52285 16.4772 12 22 12C16.4772 12 12 16.4772 12 22C12 16.4772 7.52285 12 2 12C7.52285 12 12 7.52285 12 2Z"
-                  fill="var(--color-electric)"
-                />
-              </svg>
+              <Image
+                src="/bg-logo.png"
+                alt="BCC Guide"
+                width={526}
+                height={379}
+                className={styles.brandLogo}
+              />
               <span className={styles.brandName}>BCC Guide</span>
             </div>
             <p className={styles.brandBio}>

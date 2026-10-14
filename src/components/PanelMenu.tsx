@@ -11,6 +11,7 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/browser';
@@ -364,9 +365,13 @@ export function PanelFrame({
         <aside id="panel-nav" className={sidebarClass} aria-label="Navigasi panel">
           <div className={styles.sideHead}>
             <Link href={homeHref} className={styles.brand} onClick={close}>
-              <span className={styles.brandMark} aria-hidden="true">
-                <Icon name="panel" size={18} />
-              </span>
+              <Image
+                src="/bg-logo.png"
+                alt="BCC Guide"
+                width={526}
+                height={379}
+                className={styles.brandMark}
+              />
               <span className={styles.brandText}>BCC Guide</span>
             </Link>
             <button

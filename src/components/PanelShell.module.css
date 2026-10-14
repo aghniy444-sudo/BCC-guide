@@ -63,10 +63,12 @@
   flex: none;
   width: 36px;
   height: 36px;
+  padding: 6px;
   border-radius: 11px;
-  background: linear-gradient(135deg, var(--color-electric), var(--color-bright));
-  color: #fff;
-  box-shadow: var(--shadow-glow);
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  object-fit: contain;
+  box-shadow: var(--shadow-sm);
 }
 
 .brandText {

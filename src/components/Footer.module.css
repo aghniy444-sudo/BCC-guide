@@ -25,6 +25,13 @@
   gap: 10px;
 }
 
+.brandLogo {
+  display: block;
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .brandName {
   font-family: 'Poppins', sans-serif;
   font-size: 1.4rem;
