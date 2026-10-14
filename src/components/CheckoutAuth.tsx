@@ -61,6 +61,14 @@ export default function CheckoutAuth({
         return;
       }
       onAuthenticated();
+    } catch (err) {
+      setError(
+        err instanceof Error && /json|network|fetch/i.test(err.message)
+          ? 'Koneksi ke server login terputus. Coba lagi.'
+          : err instanceof Error
+            ? err.message
+            : 'Login gagal. Coba lagi.',
+      );
     } finally {
       setLoading(false);
     }

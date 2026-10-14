@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from './CartDrawer.module.css';
 import CheckoutAuth from './CheckoutAuth';
 import { formatRupiah, type CatalogItem } from '@/data/catalog';
+import { readJson } from '@/lib/http';
 
 interface OrderView {
   id: string;
@@ -59,9 +60,10 @@ export default function CartDrawer({
   const refreshOrder = useCallback(async (orderId: string) => {
     const res = await fetch(`/api/orders/${orderId}`, { cache: 'no-store' });
     if (!res.ok) return null;
-    const data = await res.json();
-    setOrder(data.order as OrderView);
-    return data.order as OrderView;
+    const data = await readJson<{ order?: OrderView }>(res);
+    if (!data?.order) return null;
+    setOrder(data.order);
+    return data.order;
   }, []);
 
   // Poll the order while it is still awaiting payment.
@@ -95,16 +97,16 @@ export default function CartDrawer({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productIds: items.map((i) => i.id) }),
       });
-      const data = await res.json();
       if (res.status === 401) {
         setShowAuth(true);
         return;
       }
-      if (!res.ok) {
-        setError(data.error ?? 'Checkout gagal.');
+      const data = await readJson<{ order?: OrderView; error?: string }>(res);
+      if (!res.ok || !data?.order) {
+        setError(data?.error ?? `Checkout gagal (${res.status}).`);
         return;
       }
-      setOrder(data.order as OrderView);
+      setOrder(data.order);
     } catch {
       setError('Tidak dapat menghubungi server checkout.');
     } finally {

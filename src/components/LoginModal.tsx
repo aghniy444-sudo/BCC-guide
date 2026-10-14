@@ -65,6 +65,17 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         onClose();
         router.refresh();
       }
+    } catch (err) {
+      // Auth calls can fail before a JSON body ever arrives (offline, edge
+      // timeout, interrupted request). Surface that instead of leaving the
+      // form stuck with no feedback.
+      setError(
+        err instanceof Error && /json|network|fetch/i.test(err.message)
+          ? 'Koneksi ke server login terputus. Coba lagi.'
+          : err instanceof Error
+            ? err.message
+            : 'Login gagal. Coba lagi.',
+      );
     } finally {
       setLoading(false);
     }

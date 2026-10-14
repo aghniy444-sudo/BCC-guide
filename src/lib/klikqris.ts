@@ -1,6 +1,8 @@
 // Server-only module: imported exclusively by route handlers / server actions.
 // Never import from a client component.
 
+import { readJson } from '@/lib/http';
+
 /**
  * KlikQRIS client — production (MY PG Integration v2.0).
  *
@@ -61,7 +63,10 @@ export async function createQris(params: {
     throw new Error(`klikqris_create_failed:${res.status}`);
   }
 
-  const json = (await res.json()) as Record<string, unknown>;
+  const json = await readJson<Record<string, unknown>>(res);
+  if (!json) {
+    throw new Error('klikqris_create_empty_response');
+  }
   if (json.status === false) {
     throw new Error(`klikqris_create_rejected:${String(json.message ?? '')}`);
   }
@@ -99,7 +104,10 @@ export async function getQrisStatus(orderId: string): Promise<QrisStatusResult> 
     throw new Error(`klikqris_status_failed:${res.status}`);
   }
 
-  const json = (await res.json()) as Record<string, unknown>;
+  const json = await readJson<Record<string, unknown>>(res);
+  if (!json) {
+    throw new Error('klikqris_status_empty_response');
+  }
   const data = (json.data ?? json) as Record<string, unknown>;
   const total = data.total_amount;
   return {

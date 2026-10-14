@@ -63,4 +63,25 @@ describe('klikqris production client', () => {
       'klikqris_create_rejected',
     );
   });
+
+  // Regression: a 200 with an empty or HTML body used to reach `res.json()` and
+  // throw "Unexpected end of JSON input" instead of a handled error.
+  it('fails cleanly when the create response body is empty', async () => {
+    process.env.KLIKQRIS_API_KEY = 'key';
+    process.env.KLIKQRIS_MERCHANT_ID = 'merchant';
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 200 })));
+    await expect(createQris({ orderId: 'BCC-1', amount: 1000, keterangan: 'x' })).rejects.toThrow(
+      'klikqris_create_empty_response',
+    );
+  });
+
+  it('fails cleanly when the status response is an HTML error page', async () => {
+    process.env.KLIKQRIS_API_KEY = 'key';
+    process.env.KLIKQRIS_MERCHANT_ID = 'merchant';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('<html><body>502</body></html>', { status: 200 })),
+    );
+    await expect(getQrisStatus('BCC-1')).rejects.toThrow('klikqris_status_empty_response');
+  });
 });
