@@ -367,7 +367,8 @@ export function PanelFrame({
             <Link href={homeHref} className={styles.brand} onClick={close}>
               <Image
                 src="/bg-logo.png"
-                alt="BCC Guide"
+                alt=""
+                aria-hidden="true"
                 width={526}
                 height={379}
                 className={styles.brandMark}

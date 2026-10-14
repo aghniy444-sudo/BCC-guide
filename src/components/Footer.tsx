@@ -13,7 +13,8 @@ export default function Footer() {
             <div className={styles.brandRow}>
               <Image
                 src="/bg-logo.png"
-                alt="BCC Guide"
+                alt=""
+                aria-hidden="true"
                 width={526}
                 height={379}
                 className={styles.brandLogo}
